@@ -7,6 +7,7 @@
  */
 namespace backend\controllers;
 use backend\models\Article_category;
+use yii\data\Pagination;
 use yii\web\Controller;
 use yii\web\Request;
 
@@ -35,11 +36,31 @@ class Article_categoryController extends Controller
 
     public function actionIndex()
     {
+//分页
+        //分页
+        $query = Article_category::find();
+        //总条数
+        $total =$query->count();
+        //实例化分页工具类
+        $perPage = new Pagination([
+            'totalCount'=>$total,
+            'defaultPageSize'=>3
+        ]);
 
-        $rows = Article_category::find()->all();
+
+
+
+        $rows =$query->limit($perPage->limit)->offset($perPage->offset)->all();
         //分配视图
-        return $this->render('index', ['rows' => $rows]);
+        return $this->render('index',['rows'=>$rows,'perPage'=>$perPage]);
     }
+
+//
+//
+//        $rows = Article_category::find()->all();
+//        //分配视图
+//        return $this->render('index', ['rows' => $rows]);
+//    }
 
     public function actionDelete($id)
     {
